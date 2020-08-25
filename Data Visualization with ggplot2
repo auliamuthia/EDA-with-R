@@ -244,50 +244,61 @@ Adjustment for overlapping
               scale_color_discrete("Species")
 
   # The expand argument
-  ggplot(iris, aes(x = Sepal.Length,                  
-  y = Sepal.Width,                 
-  color = Species)) +  
-  geom_point(position = "jitter") + 
-  scale_x_continuous("Sepal Length",                     
-  limits = c(2, 8),                     
-  breaks = seq(2, 8, 3),                    
-  expand = c(0, 0)) + 
-  scale_color_discrete("Species")
+         ggplot(iris, aes(x = Sepal.Length,                  
+                          y = Sepal.Width,                 
+                          color = Species)) +  
+         geom_point(position = "jitter") + 
+         scale_x_continuous("Sepal Length",                     
+                            limits = c(2, 8),                     
+                            breaks = seq(2, 8, 3),                    
+                            expand = c(0, 0)) + 
+         scale_color_discrete("Species")
 
   # The labels argument
-  ggplot(iris, aes(x = Sepal.Length,                  
-  y = Sepal.Width,                 
-  color = Species)) +  
-  geom_point(position = "jitter") + 
-  scale_x_continuous("Sepal Length",                     
-  limits = c(2, 8),                     
-  breaks = seq(2, 8, 3),                    
-  expand = c(0, 0),                     
-  labels = c("Setosa", "Versicolor", "Virginica")) + 
-  scale_color_discrete("Species")
+         ggplot(iris, aes(x = Sepal.Length,                  
+                          y = Sepal.Width,                 
+                          color = Species)) +  
+         geom_point(position = "jitter") + 
+         scale_x_continuous("Sepal Length",                     
+                             limits = c(2, 8),                     
+                             breaks = seq(2, 8, 3),                    
+                             expand = c(0, 0),                     
+                             labels = c("Setosa", "Versicolor", "Virginica")) + 
+         scale_color_discrete("Species")
 
   # labs()
-  ggplot(iris, aes(x = Sepal.Length,                  
-  y = Sepal.Width,                  
-  color = Species)) +  
-  geom_point(position = "jitter") +  
-  labs(x = "Sepal Length",        
-  y = "Sepal Width",        
-  color = "Species")
+         ggplot(iris, aes(x = Sepal.Length,                  
+                          y = Sepal.Width,                  
+                          color = Species)) +  
+         geom_point(position = "jitter") +  
+         labs(x = "Sepal Length",        
+              y = "Sepal Width",        
+              color = "Species")
 
 
 AESTHETICS
 
-#Aesthetics - continuous variablesggplot(iris, aes(x = Sepal.Length,                 y = Sepal.Width,                 color = Species)) +   geom_point()
+#Aesthetics - continuous variables
+ggplot(iris, aes(x = Sepal.Length,                 
+y = Sepal.Width,                 
+color = Species)) +   
+geom_point()
 
-#Aesthetics - continuous variablesggplot(iris, aes(color = Sepal.Length,                 y = Sepal.Width,                 x = Species)) +   geom_point()
+#Aesthetics - continuous variables
+ggplot(iris, aes(color = Sepal.Length,                 
+y = Sepal.Width,                 
+x = Species)) +   
+geom_point()
 
-#Aesthetics - categorical variablesggplot(iris, aes(x = Sepal.Length,                 y = Sepal.Width,                  col = Species)) +   geom_point()
+#Aesthetics - categorical variables
+ggplot(iris, aes(x = Sepal.Length,                 
+y = Sepal.Width,                  
+col = Species)) +   
+geom_point()
 
-#Aesthetics - categorical variablesggplot(iris, aes(x = Sepal.Length,                  y = Sepal.Width,                  col = Species)) +   geom_point(position = "jitter",              alpha = 0.5)
-
-
-
-
-  
-  
+#Aesthetics - categorical variables
+ggplot(iris, aes(x = Sepal.Length,                  
+y = Sepal.Width,                  
+col = Species)) +   
+geom_point(position = "jitter",              
+alpha = 0.5)
