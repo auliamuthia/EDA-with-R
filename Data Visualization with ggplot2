@@ -1,1 +1,260 @@
+# This notebook contain basic knowledge / script of data visualization with ggplot in R.
 
+1. Introduction
+
+# data geom + coordinate system = plot #
+
+Geoms: Use geom function to represent data points
+       Use geom aes's to represent var
+       
+ggplot (data = <DATA>) +
+<GEOM_FUNCTION> (mapping = aes (<MAPPINGS>), stat = <STAT>, position = <POSITION>) +
+<COORDINATE_FUNCTION> +
+<FACET_FUNCTION> +
+<SCALE_FUNCTION> +
+<THEME_FUNCTION>
+
+  # Load the ggplot2 package
+library(ggplot2)
+
+  # Explore the mtcars data frame with str()
+str(mtcars)
+
+  # Execute the following command
+ggplot(mtcars, aes(cyl, mpg)) +
+  geom_point()
+  
+  # Explore with a linear model
+
+ggplot(mammals, aes(x = body, y = brain)) +  
+      geom_point(alpha = 0.6) +  
+      stat_smooth(    
+                  method = "lm",     
+                  color = "red",     
+                  se = FALSE  
+                  )
+                  
+# Explore with a fine-tuning
+
+ggplot(mammals, aes(x = body, y = brain)) +  
+       geom_point(alpha = 0.6) +  
+       coord_fixed() +  
+       scale_x_log10() +  
+       scale_y_log10() +  
+       stat_smooth(    
+                   method = "lm",     
+                   color = "#C42126",     
+                   se = FALSE,     
+                   size = 1  
+                   )
+                   
+2. Grammar of Graphics
+
+  # Seven essential grammatical elements
+  Data: The data-set being plotted
+  Aes: The scales onto which we map our data
+  Geom: The visual elements used for our data
+  Themes: All non-data ink
+  Statistics: Representations of our data to aid understanding
+  Coordinates: The space on which the data will be plotted
+  Facets: Plotting small multiples.
+
+3. ggplot Layers
+
+  # Adding geometries
+The diamonds dataset contains details of 1,000 diamonds. 
+Among the variables included are carat (a measurement of the diamond's size) and price.
+
+We'll use two common geom layer functions:
+
+geom_point() adds points (as in a scatter plot).
+geom_smooth() adds a smooth trend curve.
+geom_dotplot()
+geom_histogram() (bindwith:5)
+geom_density() (bw = 5)
+geom_boxplot() + coord_flip()
+geom_errorbar (aes(ymin = ___, ymax = ___))
+
+As we saw previously, these are added using the + operator.
+
+  ggplot(data, aes(x, y)) +
+  geom_*()
+  
+  # All about aesthetics: color, shape and size
+  # Map x to mpg and y to fcyl
+  ggplot(mtcars, aes(mpg, fcyl)) +
+  geom_point()
+  
+  ggplot(mtcars, aes(wt, mpg, fill = fcyl)) +
+  # Change point shape; set alpha
+  geom_point(shape = 21, size = 4, alpha = 0.6)
+  
+  # Map color to fam
+  ggplot(mtcars, aes(wt, mpg, fill = fcyl,color=fam)) +
+  geom_point(shape = 21, size = 4, alpha = 0.6)
+  
+  # Establish the base layer
+  plt_mpg_vs_wt <- ggplot(mtcars,aes(wt,mpg))
+
+  # Map fcyl to size
+  plt_mpg_vs_wt +
+  geom_point(aes(size=fcyl))
+  
+  # Base layer
+  plt_mpg_vs_wt <- ggplot(mtcars, aes(wt, mpg))
+
+  # Map fcyl to alpha, not size
+  plt_mpg_vs_wt +
+  geom_point(aes(size = fcyl,alpha = fcyl))
+  
+  # Map fcyl to shape, not alpha
+  plt_mpg_vs_wt +
+  geom_point(aes(shape = fcyl))
+  
+  # Use text layer and map fcyl to label
+  plt_mpg_vs_wt +
+  geom_text(aes(label = fcyl))
+  
+ 4. Typical Visible Aesthetics
+   x: X axis position
+   y: Y axis position
+   fill: Fill color
+   color: Color of points, outlines of othergeoms
+   size: Area or radius of points, thickness oflines
+   alpha: Transparency
+   linetype: line dash pattern
+   labels: Text on a plot or axes
+   shape: Shape
+
+  5. Using Attributes
+    ggplot(iris, aes(x = Sepal.Length,                  
+                     y = Sepal.Width)) +   
+           geom_point(color = "red",
+                      size = 10,
+                      shape = 4)
+                      
+All about attributes: color, shape, size and alpha  
+
+This time we'll use these arguments to set attributes of the plot, not map variables onto aesthetics.
+
+We can specify colors in R using hex codes: 
+    a hash followed by two hexadecimal numbers each for red, green, and blue ("#RRGGBB"). 
+    Hexadecimal is base-16 counting. 
+    We have 0 to 9, and A representing 10 up to F representing 15. 
+    Pairs of hexadecimal numbers give you a range from 0 to 255. 
+        "#000000" is "black" (no color), 
+        "#FFFFFF" means "white", and 
+        "#00FFFF" is cyan (mixed green and blue).
+ A hexadecimal color variable, my_blue has been defined for you.
+ 
+ # A hexadecimal color
+my_blue <- "#4ABEFF"
+
+ggplot(mtcars, aes(wt, mpg)) +
+  # Set the point color and alpha
+  geom_point(color = my_blue, alpha = 0.6)
+  
+  # Change the color mapping to a fill mapping
+ggplot(mtcars, aes(wt, mpg, color = fcyl, fill = fcyl)) +
+  # Set point size and shape
+  geom_point(color=my_blue, size = 10, shape = 1)
+  
+ 6. Modifying Aesthetics
+ 
+ # Positions
+Adjustment for overlapping
+      a. identity
+      b. dodge
+      c. stack
+      d. fill
+      e. jitter
+      f. jitterdodge
+      g. nudge
+      
+# Updating Aesthetics Labels
+  a. labs() to set the x- and y-axis labels. 
+  It takes strings for each argument.
+  b. scale_color_manual() 
+  defines properties of the color scale (i.e. axis). 
+  The first argument sets the legend title. 
+  values is a named vector of colors to use.
+  
+  ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar() +
+  # Set the axis labels
+  labs(x = "Number of Cylinders", y = "Count")
+  
+ # Implement a custom fill color scale using scale_fill_manual(). 
+  Set the first argument to "Transmission", and values to palette.
+  
+  palette <- c(automatic = "#377EB8", manual = "#E41A1C")
+
+  ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar() +
+  labs(x = "Number of Cylinders", y = "Count") +
+  # Set the fill color scale
+  scale_fill_manual("Transmission", values = palette)
+  
+  Modify the code to set the position to dodge so that the bars for transmissions are displayed side by side.
+  
+  palette <- c(automatic = "#377EB8", manual = "#E41A1C")
+
+  # Set the position
+  ggplot(mtcars, aes(fcyl, fill = fam)) +
+  geom_bar(position = "dodge") +
+  labs(x = "Number of Cylinders", y = "Count")
+  scale_fill_manual("Transmission", values = palette)
+  
+  # Scale Functions
+  
+  a. scale_x_continuous()
+  b. scale functionsscale_x_*()
+  c. scale_y_*()
+  d. scale_color_*() - Alternative = scale_color_discrete()
+  e. Alsoscale_colour_*()
+  f. scale_fill_*()
+  g. scale_shape_*()
+  h. scale_linetype_*()
+  i. scale_size_*()
+
+  # scale_*_*()
+  ggplot(iris, aes(x = Sepal.Length,                  
+                   y = Sepal.Width,                  
+                   color = Species)) +   
+  geom_point(position = "jitter") +  
+  scale_x_continuous("Sepal Length") +  
+  scale_color_discrete("Species")
+
+  # The limits argument
+  ggplot(iris, aes(x = Sepal.Length,                  
+                   y = Sepal.Width,                 
+                   color = Species)) +  
+  geom_point(position = "jitter") + 
+  scale_x_continuous("Sepal Length",                     
+  limits = c(2,8)) + 
+  scale_color_discrete("Species")
+  
+  #The breaks argumentggplot(iris, aes(x = Sepal.Length,                  y = Sepal.Width,                 color = Species)) +  geom_point(position = "jitter") + scale_x_continuous("Sepal Length",                     limits = c(2, 8),                     breaks = seq(2, 8, 3)) + scale_color_discrete("Species")
+
+#The expand argumentggplot(iris, aes(x = Sepal.Length,                  y = Sepal.Width,                 color = Species)) +  geom_point(position = "jitter") + scale_x_continuous("Sepal Length",                     limits = c(2, 8),                     breaks = seq(2, 8, 3),                    expand = c(0, 0)) + scale_color_discrete("Species")
+
+#The labels argumentggplot(iris, aes(x = Sepal.Length,                  y = Sepal.Width,                 color = Species)) +  geom_point(position = "jitter") + scale_x_continuous("Sepal Length",                     limits = c(2, 8),                     breaks = seq(2, 8, 3),                    expand = c(0, 0),                     labels = c("Setosa", "Versicolor", "Virginica")) + scale_color_discrete("Species")
+
+# labs()ggplot(iris, aes(x = Sepal.Length,                  y = Sepal.Width,                  color = Species)) +  geom_point(position = "jitter") +  labs(x = "Sepal Length",        y = "Sepal Width",        color = "Species")
+
+
+AESTHETICS
+
+#Aesthetics - continuous variablesggplot(iris, aes(x = Sepal.Length,                 y = Sepal.Width,                 color = Species)) +   geom_point()
+
+#Aesthetics - continuous variablesggplot(iris, aes(color = Sepal.Length,                 y = Sepal.Width,                 x = Species)) +   geom_point()
+
+#Aesthetics - categorical variablesggplot(iris, aes(x = Sepal.Length,                 y = Sepal.Width,                  col = Species)) +   geom_point()
+
+#Aesthetics - categorical variablesggplot(iris, aes(x = Sepal.Length,                  y = Sepal.Width,                  col = Species)) +   geom_point(position = "jitter",              alpha = 0.5)
+
+
+
+
+  
+  
