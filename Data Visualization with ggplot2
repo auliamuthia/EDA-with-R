@@ -25,7 +25,6 @@ ggplot(mtcars, aes(cyl, mpg)) +
   geom_point()
   
   # Explore with a linear model
-
 ggplot(mammals, aes(x = body, y = brain)) +  
       geom_point(alpha = 0.6) +  
       stat_smooth(    
@@ -34,8 +33,7 @@ ggplot(mammals, aes(x = body, y = brain)) +
                   se = FALSE  
                   )
                   
-# Explore with a fine-tuning
-
+   # Explore with a fine-tuning
 ggplot(mammals, aes(x = body, y = brain)) +  
        geom_point(alpha = 0.6) +  
        coord_fixed() +  
@@ -65,7 +63,7 @@ ggplot(mammals, aes(x = body, y = brain)) +
 The diamonds dataset contains details of 1,000 diamonds. 
 Among the variables included are carat (a measurement of the diamond's size) and price.
 
-We'll use two common geom layer functions:
+ We'll use two common geom layer functions:
 
 geom_point() adds points (as in a scatter plot).
 geom_smooth() adds a smooth trend curve.
@@ -75,13 +73,13 @@ geom_density() (bw = 5)
 geom_boxplot() + coord_flip()
 geom_errorbar (aes(ymin = ___, ymax = ___))
 
-As we saw previously, these are added using the + operator.
+ As we saw previously, these are added using the + operator.
 
-  ggplot(data, aes(x, y)) +
-  geom_*()
+ ggplot(data, aes(x, y)) +
+ geom_*()
   
-  # All about aesthetics: color, shape and size
-  # Map x to mpg and y to fcyl
+ # All about aesthetics: color, shape and size
+ # Map x to mpg and y to fcyl
   ggplot(mtcars, aes(mpg, fcyl)) +
   geom_point()
   
@@ -116,6 +114,7 @@ As we saw previously, these are added using the + operator.
   geom_text(aes(label = fcyl))
   
  4. Typical Visible Aesthetics
+ 
    x: X axis position
    y: Y axis position
    fill: Fill color
@@ -234,13 +233,47 @@ Adjustment for overlapping
   limits = c(2,8)) + 
   scale_color_discrete("Species")
   
-  #The breaks argumentggplot(iris, aes(x = Sepal.Length,                  y = Sepal.Width,                 color = Species)) +  geom_point(position = "jitter") + scale_x_continuous("Sepal Length",                     limits = c(2, 8),                     breaks = seq(2, 8, 3)) + scale_color_discrete("Species")
+  # The breaks argument
+       ggplot(iris, aes(x = Sepal.Length,                  
+                        y = Sepal.Width,                 
+                        color = Species)) +  
+              geom_point(position = "jitter") + 
+              scale_x_continuous("Sepal Length",                     
+                                  limits = c(2, 8),                    
+                                  breaks = seq(2, 8, 3)) + 
+              scale_color_discrete("Species")
 
-#The expand argumentggplot(iris, aes(x = Sepal.Length,                  y = Sepal.Width,                 color = Species)) +  geom_point(position = "jitter") + scale_x_continuous("Sepal Length",                     limits = c(2, 8),                     breaks = seq(2, 8, 3),                    expand = c(0, 0)) + scale_color_discrete("Species")
+  # The expand argument
+  ggplot(iris, aes(x = Sepal.Length,                  
+  y = Sepal.Width,                 
+  color = Species)) +  
+  geom_point(position = "jitter") + 
+  scale_x_continuous("Sepal Length",                     
+  limits = c(2, 8),                     
+  breaks = seq(2, 8, 3),                    
+  expand = c(0, 0)) + 
+  scale_color_discrete("Species")
 
-#The labels argumentggplot(iris, aes(x = Sepal.Length,                  y = Sepal.Width,                 color = Species)) +  geom_point(position = "jitter") + scale_x_continuous("Sepal Length",                     limits = c(2, 8),                     breaks = seq(2, 8, 3),                    expand = c(0, 0),                     labels = c("Setosa", "Versicolor", "Virginica")) + scale_color_discrete("Species")
+  # The labels argument
+  ggplot(iris, aes(x = Sepal.Length,                  
+  y = Sepal.Width,                 
+  color = Species)) +  
+  geom_point(position = "jitter") + 
+  scale_x_continuous("Sepal Length",                     
+  limits = c(2, 8),                     
+  breaks = seq(2, 8, 3),                    
+  expand = c(0, 0),                     
+  labels = c("Setosa", "Versicolor", "Virginica")) + 
+  scale_color_discrete("Species")
 
-# labs()ggplot(iris, aes(x = Sepal.Length,                  y = Sepal.Width,                  color = Species)) +  geom_point(position = "jitter") +  labs(x = "Sepal Length",        y = "Sepal Width",        color = "Species")
+  # labs()
+  ggplot(iris, aes(x = Sepal.Length,                  
+  y = Sepal.Width,                  
+  color = Species)) +  
+  geom_point(position = "jitter") +  
+  labs(x = "Sepal Length",        
+  y = "Sepal Width",        
+  color = "Species")
 
 
 AESTHETICS
