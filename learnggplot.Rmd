@@ -1,285 +1,173 @@
 ---
 title: "learnggplot"
-author: "Samuel"
-date: "4/21/2020"
+author: "Muthia"
+date: "7/28/2020"
 output: html_document
 ---
-
 ```{r}
-options(scipen=1)
-library(ggplot2)
-library(extrafont)
-library(ggthemes)
-covid <- read.csv("data_input/covid_clean.csv")
-covid$date <- as.Date(covid$date)
-covid <- covid[order(covid$date), 2:6]
-northam <- subset(covid, country=="US" | country=="Canada")
+covid <- read.csv("C:/Users/Aulia Muthia/Downloads/Algoritma/covidRT/covidRT/data_input/covid_clean.csv")
+covid <- covid [,2:6]
+covid$date <- as.Date (covid$date)
+
+# order based on covid$date
+covid <- covid[order(covid$date),]
+head(covid)
 ```
 
-
-
-
-
-```{r}
-euro5 <- subset(covid, country == "Germany" | 
-                  country=="Italy" | 
-                  country == "Spain" |
-                  country == "France" |
-                  country == "United Kingdom")
-euro5$country <- factor(euro5$country)
-aggregate(deaths ~ country, euro5, sum)
-```
+# You are assigned by WHO to study the cases in the North America continent / region
+# Give the new dataframe the name "northam"
 
 ```{r}
-covid[covid$country == "Germany" & 
-             covid$date >= as.Date("2020-04-15") |
-             covid$recovered > 74000, ]
-```
-
-
-```{r}
-euro5 <- subset(covid, country == "Germany" | 
-                  country=="Italy" | 
-                  country == "Spain" |
-                  country == "France" |
-                  country == "United Kingdom")
-euro5$country <- factor(euro5$country)
-aggregate(deaths ~ country, euro5, sum)
-```
-
-```{r}
-euro5countries <- c("Germany", "Italy", "Spain", "France", "United Kingdom")
-euro5 <- subset(covid, country %in% euro5countries)
-euro5$country <- factor(euro5$country)
-```
-
-
-```{r}
-ggplot(data=euro5, mapping=aes(x=date, y=deaths, color=country)) +
-  geom_line()
+northam <- subset (covid, country == "US" | country == "Canada")
+summary(northam)
 ```
 ```{r}
-plot1 <- ggplot(data=euro5, mapping=aes(x=date, y=deaths, color=country))
-plot1
+plot(x=northam$date, 
+     y=log(northam$confirmed) , 
+     type = "l", 
+     )
 ```
+
+# You are assigned by WHO to study the cases in the key Europe countries ("Germany", Italy, Spain,France, "United Kingdom" )
+# Give the new dataframe the name "euro5"
+
 ```{r}
-plot1 + geom_boxplot()
+euro5 <- subset (covid, 
+                   country == "Germany" |
+                    country == "Italy" | 
+                    country == "Spain" |
+                     country == "France" |
+                     country == "United Kingdom")
+summary(euro5)
+```
+
+Challange : In my ggplot I want all 5 countries + Indonesia + Canada
+
+
+```{r}
+euro5countries <- c("Germany", "Italy", "Spain","France" , "United Kingdom" )
+euro5 <- subset (covid, country %in% euro5countries)
+head(euro5)
+
 ```
 
 ```{r}
-plot1 <- ggplot(data=euro5, mapping=aes(x=date, y=deaths, color=country))
-plot1 + 
-  geom_line() + 
-  geom_point() 
-```
-
-```{r}
-plot1 <- ggplot(data=euro5)
-plot1 + 
-  geom_line(mapping=aes(x=date, y=deaths, color=country)) + 
-  geom_point(mapping=aes(x=date, y=deaths), size=0.5)
-```
-```{r}
-america <- subset(covid, country=="US")
-ggplot(data=america) +
-  geom_line(mapping=aes(x=date, y=recovered), 
-            col="darkgreen", 
-            linetype="dashed",
-            )
+usa <- subset (covid, country=="US")
+ggplot (usa, 
+        mapping = aes(x=date ,
+                      y= confirmed,
+                      color =country))+geom_line()
 ```
 
 
+#In my ggplot I want all 5 countries + Indonesia + Canada
+
 ```{r}
-plot1 <- ggplot(data=euro5, aes(x=date, y=deaths, color=country), size=1)
-plot1 + 
-  geom_line(aes(linetype=country), color="black", size=0.5) + 
-  geom_point(size=0.3)
-```
-```{r}
-ggplot(data=covid[covid$confirmed > 20000, ], aes(x=deaths))+ 
-  geom_histogram(binwidth=1000)
+targetcountries <- c("Germany", "Italy", "Spain","France" , "United Kingdom", "Indonesia", "Canada" )
+target <- subset (covid,country%in%targetcountries)
+plot1 <- ggplot (target, mapping = aes(x=date, y=deaths, color=country)) 
+plot1 +geom_line()
 ```
 
 ```{r}
-ggplot(data=covid[covid$confirmed > 20000, ], aes(x=deaths))+ 
-  geom_freqpoly(binwidth=300)
-```
+#Option 1
+plot1 + geom_line() + geom_point (col="black", size=0.5)
 
+#Option 2
+plot1 + geom_line(size=2) + geom_point (col="black", size=0.5)
 
-
-```{r}
-ggplot(data=covid[covid$confirmed > 20000, ], aes(x=deaths))+ 
-  geom_histogram(binwidth=1000, fill="navy") +
-  geom_freqpoly(binwidth=1000, col="purple")
-```
-
-
-```{r}
-x <- covid[covid$confirmed > 20000, ]
-x$cumudeaths<- x$deaths > x$recovered
-  
-ggplot(data=x)+ 
-  geom_dotplot(mapping=aes(x=deaths, fill=cumudeaths, color=cumudeaths), 
-               binwidth=400, 
-               stackdir="center",
-               dotsize=0.7, 
-               stackratio = 1.4,
-               show.legend = FALSE, position="dodge") +
-  scale_color_manual(values=c("azure4", "firebrick4"), aesthetics = c("colour", "fill")) 
-```
-
-
-```{r}
-ggplot(data=covid[covid$confirmed > 20000, ])+ 
-  geom_dotplot(mapping=aes(x=deaths), binwidth=400, stackdir="center")
-```
-```{r}
-newc <- subset(covid, confirmed > 10000 & date == as.Date("2020-04-17"))
-tail(newc)
+#Option 3
+plot1 + geom_boxplot() 
 ```
 
 ```{r}
-library(reshape2)
-melted <- melt(newc[,2:5], id="country")
-tail(melted)
-```
-
-```{r}
-ggplot(data=melted, aes(x=value, y=country, fill=variable)) + 
-  geom_col() 
-```
-
-
-```{r}
-ggplot(data=melted, aes(x=value, y=country, fill=variable)) + 
-  geom_col() +
-  labs(title="Covid-19 Pandemic, as of 17th April",
-       caption="Source: JHU CSSE, graph by @NoahTheDev")
-```
-
-```{r}
-ggplot(data=melted, aes(x=value, y=country, fill=variable)) + 
-  geom_col() +
-  geom_vline(xintercept=mean(melted[melted$variable=="confirmed","value"]),
-             color="maroon", linetype="dashed") +
-  labs(title="Covid-19 Pandemic, 2020", 
-       subtitle="--- line: Average of confirmed cases",
-       caption="Source: JHU CSSE, graph by Finetut.com", 
-       x="", y="") +
-  theme_linedraw() +
-  theme(
-    plot.title = element_text(face = "bold",size = 16),
-    plot.subtitle = element_text(face = "italic",color = "gray55"),
-    text = element_text(family=".New York"),
-    legend.text = element_text(size=6),
-    legend.title = element_blank(),
-    legend.key.size = unit(0.5, "line"),
-    legend.position = "bottom"
-  )
-```
-```{r}
-ggplot(data=melted, aes(x=value, y=country, fill=variable)) + 
-  geom_col() +
-  geom_vline(xintercept=mean(melted[melted$variable=="confirmed","value"]),
-             color="black", linetype="dotted") +
-  labs(title="Covid-19 Pandemic, 2020", 
-       subtitle="--- line: Average of confirmed cases",
-       caption="Source: JHU CSSE, graph by Finetut.com", 
-       x="", y="") +
+#geom boxplot dan geom jitter itu layering sistem jadi yang duluan itu yang dibawah
+#buat warna naronya di geom semua, karna yang di mapping bener2 hanya mapping data aja
+ggplot (data=target, mapping=aes(x=country,y=recovered,fill=country)) +geom_jitter() +
+  geom_boxplot() +
+  labs (x="Country", 
+        y="Healed" , 
+        title = "COVID-19 Path to Recovery", 
+        subtitle = "Germany leading in COVID-19 Recovery", 
+        caption = "Developed by : Muthi, Strategic Performance Team") + 
+  #flip x to y and y to x 
+  coord_flip() +
   theme_clean() +
-  theme(
-    plot.title = element_text(face = "bold",size = 16),
-    plot.subtitle = element_text(face = "italic",color = "gray55"),
-    text = element_text(family=".New York"),
-    legend.text = element_text(size=6),
-    legend.title = element_blank(),
-    legend.key.size = unit(0.5, "line"),
-    legend.position = "bottom"
-  )
-```
-```{r}
-or <- order(melted[melted$variable == "confirmed", "value"])
-melted$country[or]
+  theme (
+    legend.position = "left",
+    axis.text.x = element_text(angle=90,hjust=1),
+    panel.grid.major.x=element_blank()
+  ) 
+#https://github.com/Argaadya/tidytuesday
+#https://cran.r-project.org/web/packages/tidyquant/vignettes/TQ04-charting-with-tidyquant.html
+#https://github.com/onlyphantom/ggplot2cheatsheet
+
 ```
 
 ```{r}
-or <- order(melted[melted$variable == "recovered", "value"])
+ggplot(data = covid[covid$confirmed > 20000,],
+       aes(x=deaths)) +
+  geom_histogram(binwidth = 1000, fill="seagreen") +
+  geom_freqpoly(binwidth = 1000, col="hotpink")
 ```
 
 ```{r}
-newc <- covid[covid$date == max(covid$date, na.rm=TRUE), ]
-newc <- newc[order(newc$confirmed),]
-melted <- melt(newc[,2:5], id="country")
+covid[order(covid$confirmed,decreasing=TRUE),]
+```
 
-cntToPlot <- tail(newc$country, 20)
-melted <- subset(melted, country %in% cntToPlot)
+# You can also search on #TidyTuesday on twitter. They put new data every week for you to practice your data visualization. Some people there share their code if you wish to copy
+
+#samuel@algorit.ma
+
+29 August 2020 (day 3)
+
+Practice Create a df name newdata by subsetting covid to take rows where confirmed cases are above 10000 (on the most recent data)
+1. look only at most recent day
+2. filter for countries with more than 10000
+
+```{r}
+#data[row_condition, col_condition]
+n <- 10000
+newdata <- subset(mostrecent, 
+                  confirmed > n & 
+                    date == max(date))
+head(newdata)
+```
+
+As of the latest information, r nrow(newdata) countries have more than 10000 cases
+
+We refer to the stage of 'newdata' as being "wide", not a "tall" data
+```{r}
+dim(newdata)
+```
+
+Melt melts the data from wide to tall // similar with pivoting // #id means that this is the primary key // In this case, all the date are the same
+```{r}
+melted <- melt(newdata [,2:5], id="country")
 tail(melted)
 ```
 
 ```{r}
-order(melted$country)
+plot <- ggplot(melted, 
+               aes(x=country,y=value/1000,fill=variable)) + 
+  geom_col(position = "stack") +
+  labs (y="(in thousands)",
+        title = "COVID - 19 Pandemic, 2020",
+        subtitle = "Data source from JHU CSSE",
+        caption = "Developed by : Muthi, Strategic Performance Team") + 
+  #flip x to y and y to x 
+  coord_flip() +
+  theme_clean() +
+  theme (
+    legend.position = "left",
+    axis.text.x = element_text(angle=90,hjust=1),
+    panel.grid.major.x=element_blank(),
+    title = element_text(face="bold")
+  ) 
+plot
+
+#https://github.com/onlyphantom/safeskies
+#https://www.quora.com/profile/Samuel-Chan-3
+#https://github.com/onlyphantom/rgraphics
+
 ```
-
-```{r}
-levels(melted$country)[1:length(melted$country)]
-```
-
-
-```{r}
-factor(melted$country, levels=sort(melted$country))[1]
-```
-
-
-```{r}
-or <- levels(sort(melted$country))
-ggplot(data=melted, 
-       aes(x=value, y=factor(country, levels=or), col=variable)) + 
-  geom_point(aes(size=value)) 
-```
-
-
-```{r}
-or <- levels(melted$country)
-ggplot(data=melted, 
-       aes(x=value, y=factor(country, levels=country[or]), col=variable)) + 
-  geom_point(aes(size=value)) 
-```
-
-```{r}
-or <- order(melted[melted$variable == "recovered", "value"])
-ggplot(data=melted, 
-       aes(x=value, y=factor(country, levels=country[or]), col=variable)) + 
-  geom_point(aes(size=value)) +
-  guides(size="none")
-```
-
-
-
-```{r}
-ggplot(data=melted, aes(x=value, y=country, fill=variable)) + 
-  geom_col() +
-  geom_vline(xintercept=mean(melted[melted$variable=="confirmed","value"]),
-             color="grey99", linetype="dashed") +
-  labs(title="Covid-19 Pandemic, 2020", 
-       subtitle="--- line: Average of confirmed cases",
-       caption="Source: JHU CSSE, graph by Finetut.com", 
-       x="", y="") +
-  scale_color_manual(values=c("goldenrod2", "firebrick3", "lightblue"), aesthetics = c("colour", "fill")) +
-  theme_minimal() +
-  theme(
-    plot.title = element_text(face = "bold",size = 16, color="gray77"),
-    plot.subtitle = element_text(face = "italic",color = "gray99"),
-    text = element_text(family=".New York", color="gray77"),
-    legend.text = element_text(size=6),
-    legend.title = element_blank(),
-    legend.key.size = unit(0.5, "line"),
-    legend.position = c(0.9, 0.1),
-    plot.background = element_rect(fill="black",linetype = "blank"),
-    axis.text = element_text(color="gray77"),
-    panel.grid.minor = element_blank(),
-    panel.grid.major = element_line(color="gray33")
-  )
-```
-
-
-
