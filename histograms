@@ -1,0 +1,62 @@
+Histograms
+
+ggplot(iris, aes(x = Sepal.Width)) +   
+      geom_histogram()
+
+A plot of binned values
+  i.e. a statistical function
+  
+`stat_bin()` using `bins = 30`.
+Pick better value with `binwidth`.
+
+1. Default of 30 even bins
+ggplot(iris, aes(x = Sepal.Width)) +   
+geom_histogram()A plot of binned values
+  i.e. a statistical function
+
+# Default bin width:
+  diff(range(iris$Sepal.Width))/30
+  [1] 0.08
+  
+2. Intuitive and meaningful bin widths
+ggplot(iris, aes(x = Sepal.Width)) +   
+geom_histogram(binwidth = 0.1)
+  Always set a meaningful bin widths for yourdata.
+  No spaces between bars.
+  
+3. Re-position tick marks
+ggplot(iris, aes(x = Sepal.Width)) +   
+geom_histogram(binwidth = 0.1,                 
+               center = 0.05)
+   Always set a meaningful bin widths for yourdata.
+   No spaces between bars.X axis labels are between bars.
+   
+ 4. Different Species
+ ggplot(iris, aes(x = Sepal.Width,                  
+                  fill = Species)) +   
+ geom_histogram(binwidth = .1,                  
+                center = 0.05)
+                
+ 5. Default position is "stack"
+    ggplot(iris, aes(x = Sepal.Width,                 
+                     fill = Species)) +   
+    geom_histogram(binwidth = .1,                  
+                   center = 0.05,                 
+                   position = "stack")
+                   
+  6. position = "dodge"
+     ggplot(iris, aes(x = Sepal.Width,                  
+                      fill = Species)) +   
+     geom_histogram(binwidth = .1,                  
+                    center = 0.05,                  
+                    position = "dodge")  
+                    
+   7. position = "ll"
+      ggplot(iris, aes(x = Sepal.Width, 
+                       fill = Species) +
+      geom_histogram(binwidth = .1, 
+                     center = 0)
+
+          
+
+
