@@ -117,7 +117,6 @@ covid[order(covid$confirmed,decreasing=TRUE),]
 
 # You can also search on #TidyTuesday on twitter. They put new data every week for you to practice your data visualization. Some people there share their code if you wish to copy
 
-#samuel@algorit.ma
 
 29 August 2020 (day 3)
 
