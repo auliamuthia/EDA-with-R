@@ -1,0 +1,285 @@
+---
+title: "learnggplot"
+author: "Samuel"
+date: "4/21/2020"
+output: html_document
+---
+
+```{r}
+options(scipen=1)
+library(ggplot2)
+library(extrafont)
+library(ggthemes)
+covid <- read.csv("data_input/covid_clean.csv")
+covid$date <- as.Date(covid$date)
+covid <- covid[order(covid$date), 2:6]
+northam <- subset(covid, country=="US" | country=="Canada")
+```
+
+
+
+
+
+```{r}
+euro5 <- subset(covid, country == "Germany" | 
+                  country=="Italy" | 
+                  country == "Spain" |
+                  country == "France" |
+                  country == "United Kingdom")
+euro5$country <- factor(euro5$country)
+aggregate(deaths ~ country, euro5, sum)
+```
+
+```{r}
+covid[covid$country == "Germany" & 
+             covid$date >= as.Date("2020-04-15") |
+             covid$recovered > 74000, ]
+```
+
+
+```{r}
+euro5 <- subset(covid, country == "Germany" | 
+                  country=="Italy" | 
+                  country == "Spain" |
+                  country == "France" |
+                  country == "United Kingdom")
+euro5$country <- factor(euro5$country)
+aggregate(deaths ~ country, euro5, sum)
+```
+
+```{r}
+euro5countries <- c("Germany", "Italy", "Spain", "France", "United Kingdom")
+euro5 <- subset(covid, country %in% euro5countries)
+euro5$country <- factor(euro5$country)
+```
+
+
+```{r}
+ggplot(data=euro5, mapping=aes(x=date, y=deaths, color=country)) +
+  geom_line()
+```
+```{r}
+plot1 <- ggplot(data=euro5, mapping=aes(x=date, y=deaths, color=country))
+plot1
+```
+```{r}
+plot1 + geom_boxplot()
+```
+
+```{r}
+plot1 <- ggplot(data=euro5, mapping=aes(x=date, y=deaths, color=country))
+plot1 + 
+  geom_line() + 
+  geom_point() 
+```
+
+```{r}
+plot1 <- ggplot(data=euro5)
+plot1 + 
+  geom_line(mapping=aes(x=date, y=deaths, color=country)) + 
+  geom_point(mapping=aes(x=date, y=deaths), size=0.5)
+```
+```{r}
+america <- subset(covid, country=="US")
+ggplot(data=america) +
+  geom_line(mapping=aes(x=date, y=recovered), 
+            col="darkgreen", 
+            linetype="dashed",
+            )
+```
+
+
+```{r}
+plot1 <- ggplot(data=euro5, aes(x=date, y=deaths, color=country), size=1)
+plot1 + 
+  geom_line(aes(linetype=country), color="black", size=0.5) + 
+  geom_point(size=0.3)
+```
+```{r}
+ggplot(data=covid[covid$confirmed > 20000, ], aes(x=deaths))+ 
+  geom_histogram(binwidth=1000)
+```
+
+```{r}
+ggplot(data=covid[covid$confirmed > 20000, ], aes(x=deaths))+ 
+  geom_freqpoly(binwidth=300)
+```
+
+
+
+```{r}
+ggplot(data=covid[covid$confirmed > 20000, ], aes(x=deaths))+ 
+  geom_histogram(binwidth=1000, fill="navy") +
+  geom_freqpoly(binwidth=1000, col="purple")
+```
+
+
+```{r}
+x <- covid[covid$confirmed > 20000, ]
+x$cumudeaths<- x$deaths > x$recovered
+  
+ggplot(data=x)+ 
+  geom_dotplot(mapping=aes(x=deaths, fill=cumudeaths, color=cumudeaths), 
+               binwidth=400, 
+               stackdir="center",
+               dotsize=0.7, 
+               stackratio = 1.4,
+               show.legend = FALSE, position="dodge") +
+  scale_color_manual(values=c("azure4", "firebrick4"), aesthetics = c("colour", "fill")) 
+```
+
+
+```{r}
+ggplot(data=covid[covid$confirmed > 20000, ])+ 
+  geom_dotplot(mapping=aes(x=deaths), binwidth=400, stackdir="center")
+```
+```{r}
+newc <- subset(covid, confirmed > 10000 & date == as.Date("2020-04-17"))
+tail(newc)
+```
+
+```{r}
+library(reshape2)
+melted <- melt(newc[,2:5], id="country")
+tail(melted)
+```
+
+```{r}
+ggplot(data=melted, aes(x=value, y=country, fill=variable)) + 
+  geom_col() 
+```
+
+
+```{r}
+ggplot(data=melted, aes(x=value, y=country, fill=variable)) + 
+  geom_col() +
+  labs(title="Covid-19 Pandemic, as of 17th April",
+       caption="Source: JHU CSSE, graph by @NoahTheDev")
+```
+
+```{r}
+ggplot(data=melted, aes(x=value, y=country, fill=variable)) + 
+  geom_col() +
+  geom_vline(xintercept=mean(melted[melted$variable=="confirmed","value"]),
+             color="maroon", linetype="dashed") +
+  labs(title="Covid-19 Pandemic, 2020", 
+       subtitle="--- line: Average of confirmed cases",
+       caption="Source: JHU CSSE, graph by Finetut.com", 
+       x="", y="") +
+  theme_linedraw() +
+  theme(
+    plot.title = element_text(face = "bold",size = 16),
+    plot.subtitle = element_text(face = "italic",color = "gray55"),
+    text = element_text(family=".New York"),
+    legend.text = element_text(size=6),
+    legend.title = element_blank(),
+    legend.key.size = unit(0.5, "line"),
+    legend.position = "bottom"
+  )
+```
+```{r}
+ggplot(data=melted, aes(x=value, y=country, fill=variable)) + 
+  geom_col() +
+  geom_vline(xintercept=mean(melted[melted$variable=="confirmed","value"]),
+             color="black", linetype="dotted") +
+  labs(title="Covid-19 Pandemic, 2020", 
+       subtitle="--- line: Average of confirmed cases",
+       caption="Source: JHU CSSE, graph by Finetut.com", 
+       x="", y="") +
+  theme_clean() +
+  theme(
+    plot.title = element_text(face = "bold",size = 16),
+    plot.subtitle = element_text(face = "italic",color = "gray55"),
+    text = element_text(family=".New York"),
+    legend.text = element_text(size=6),
+    legend.title = element_blank(),
+    legend.key.size = unit(0.5, "line"),
+    legend.position = "bottom"
+  )
+```
+```{r}
+or <- order(melted[melted$variable == "confirmed", "value"])
+melted$country[or]
+```
+
+```{r}
+or <- order(melted[melted$variable == "recovered", "value"])
+```
+
+```{r}
+newc <- covid[covid$date == max(covid$date, na.rm=TRUE), ]
+newc <- newc[order(newc$confirmed),]
+melted <- melt(newc[,2:5], id="country")
+
+cntToPlot <- tail(newc$country, 20)
+melted <- subset(melted, country %in% cntToPlot)
+tail(melted)
+```
+
+```{r}
+order(melted$country)
+```
+
+```{r}
+levels(melted$country)[1:length(melted$country)]
+```
+
+
+```{r}
+factor(melted$country, levels=sort(melted$country))[1]
+```
+
+
+```{r}
+or <- levels(sort(melted$country))
+ggplot(data=melted, 
+       aes(x=value, y=factor(country, levels=or), col=variable)) + 
+  geom_point(aes(size=value)) 
+```
+
+
+```{r}
+or <- levels(melted$country)
+ggplot(data=melted, 
+       aes(x=value, y=factor(country, levels=country[or]), col=variable)) + 
+  geom_point(aes(size=value)) 
+```
+
+```{r}
+or <- order(melted[melted$variable == "recovered", "value"])
+ggplot(data=melted, 
+       aes(x=value, y=factor(country, levels=country[or]), col=variable)) + 
+  geom_point(aes(size=value)) +
+  guides(size="none")
+```
+
+
+
+```{r}
+ggplot(data=melted, aes(x=value, y=country, fill=variable)) + 
+  geom_col() +
+  geom_vline(xintercept=mean(melted[melted$variable=="confirmed","value"]),
+             color="grey99", linetype="dashed") +
+  labs(title="Covid-19 Pandemic, 2020", 
+       subtitle="--- line: Average of confirmed cases",
+       caption="Source: JHU CSSE, graph by Finetut.com", 
+       x="", y="") +
+  scale_color_manual(values=c("goldenrod2", "firebrick3", "lightblue"), aesthetics = c("colour", "fill")) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold",size = 16, color="gray77"),
+    plot.subtitle = element_text(face = "italic",color = "gray99"),
+    text = element_text(family=".New York", color="gray77"),
+    legend.text = element_text(size=6),
+    legend.title = element_blank(),
+    legend.key.size = unit(0.5, "line"),
+    legend.position = c(0.9, 0.1),
+    plot.background = element_rect(fill="black",linetype = "blank"),
+    axis.text = element_text(color="gray77"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color="gray33")
+  )
+```
+
+
+
